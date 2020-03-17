@@ -1,0 +1,14 @@
+version: "3.1"
+services:
+  ###
+  # This service will serve the application
+  ###
+  app:
+    tty: true
+    image: 'epcallan/php7-testing-phpunit:7.1-phpunit7'
+    working_dir: /var/www
+    ports:
+    - 8000:8000
+    volumes:
+    - ./:/var/www
+    command: php -S 0.0.0.0:8000 -t public 

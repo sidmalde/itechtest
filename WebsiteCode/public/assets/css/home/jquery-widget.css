@@ -1,0 +1,62 @@
+/*
+ * CSS FOR THE JQUERY PLUGIN
+ */
+.tweetInform {
+    background: #4cae4c;
+    color: #fff;
+}
+
+.tweetNoInform {
+    background: #333;
+    color: white
+}
+
+.tweetBanner, .tweetFooter {
+    font-size: 2rem;
+    text-align: center;
+    padding: 3px;
+}
+
+.tweetContainer {
+    max-height: 400px;
+    overflow-y: scroll
+}
+
+.tweetItem {
+    display: flex;
+    align-items: flex-start;
+    background: #efefef;
+    padding: 1rem;
+    margin: 0 0 1rem 0;
+    border: 1px solid #ececec;
+
+    /*background: #efefef; padding: 10px; margin-bottom: 14px; border: 1px solid #ececec*/
+}
+
+.tweetItem > img.tweetAvatar {
+    width: 75px;
+    margin: 0 1rem 0 0;
+}
+
+.tweetItem > div {
+    flex: 1;
+}
+
+.tweetItem h2 {
+    font-weight: 500;
+    margin: 0 0 1rem 0;
+}
+
+.tweetItem .tweetUserName {
+    font-weight: bold;
+}
+
+.tweetItem .tweetScreenName {
+    font-size: 1rem;
+}
+
+.tweetError {
+    background: red;
+    color: #fff;
+}
+

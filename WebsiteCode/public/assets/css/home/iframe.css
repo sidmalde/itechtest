@@ -1,0 +1,9 @@
+iframe {
+     border-width: 0;
+     width: 100%;
+     min-height: 430px;
+}
+
+.page-header ol li {
+    margin-bottom: 20px;
+}
