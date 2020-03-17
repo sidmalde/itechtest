@@ -67,11 +67,23 @@ class TwitterController extends BaseController
         $errorHasOccurred = false;
         $errorMessage = '';
         $response = '';
+        $returnData = [];
         if (null !== $twitterHandle) {
             // set the details for fetching the data here
-            $twitterManager = $twitterManager->setTwitterHandle($twitterHandle)->setCount($count);
-            $response = $twitterManager->initiateRequest();
+            $twitterManager = $twitterManager->setUrl('userTimeline')->setTwitterHandle($twitterHandle)->setCount($count);
+            $returnData['tweets'] = json_decode($twitterManager->initiateRequest());
 
+            // var_dump($response);
+            // die;
+
+            $twitterManager = $this->getApplication()['twitter'];
+            $twitterManager = $twitterManager->setUrl('userInfo')->setTwitterHandle($twitterHandle)->setCount(1);
+            $returnData['userInfo'] = json_decode($twitterManager->initiateRequest());
+
+            // var_dump($response2);
+            // die;
+
+            $response = json_encode($returnData);
 
             /*
              * Error Handling Mechanism here
@@ -97,6 +109,8 @@ class TwitterController extends BaseController
     {
         // fetch the tweets
         $tweets = $this->fetchTweets();
+        // var_dump($tweets);
+        // die;
         [
             'response'         => $response,
             'errorMessage'     => $errorMessage,

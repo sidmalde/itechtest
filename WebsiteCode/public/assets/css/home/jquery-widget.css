@@ -17,6 +17,23 @@
     padding: 3px;
 }
 
+.tweetHeader {
+    min-height: 120px;
+    padding:10px;
+    background-color: #093e7b;
+    color: #ffffff;
+}
+
+.userFullName {
+    font-weight: bold;
+    font-size: 2rem;
+    color: #fff;
+}
+
+.userInfo {
+    font-size: 1.3rem;
+}
+
 .tweetContainer {
     max-height: 400px;
     overflow-y: scroll

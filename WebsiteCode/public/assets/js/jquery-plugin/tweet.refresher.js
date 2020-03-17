@@ -1,12 +1,41 @@
 (function ($) {
 
+    $.fn.loadIframe = function (options = {}) {
+
+        console.log('aaa');
+
+        let defaultOptions = $.extend({
+            'handle': '@codinghorror',
+            'count': 20,
+        }, options);
+
+        const IFRAME_ENDPOINT = '/iframe';
+
+        let handle = defaultOptions.handle;
+        let count = defaultOptions.count;
+        handle = encodeURI(handle);
+        let queryString = {
+            handle, count
+        };
+
+        const fetcher = $.get(IFRAME_ENDPOINT, queryString);
+
+        fetcher.done((data) => {
+            $("#ifTweets").html(data);
+        });
+
+        fetcher.fail((data) => {
+        });
+    };
+
     $.fn.refreshTweets = function (options = {}) {
         let defaultOptions = $.extend({
             'interval': 5,
             'handle': '@bbc',
             'count': 20,
             'countDownSuffix': ' until next refresh',
-            'refreshAfterError': true
+            'refreshAfterError': true,
+            'getUserInfo': false,
         }, options);
 
         // not to be configured through the jquery options
@@ -20,6 +49,7 @@
         const injectTemplate = (element) => {
             const template = `
             <div class="tweetBanner tweetNoInform"></div>
+            <div class="tweetHeader"></div>
             <div class="tweetContainer"></div>
             <div class="tweetFooter"></div>
             `;
@@ -57,13 +87,20 @@
              * Let's handle our success
              */
             fetcher.done((data) => {
-
+                tweets = data['tweets'];
+                userInfo = data['userInfo'];
                 // clear any existing error if we have one
                 clearFooter(element);
 
-                $(data).each((index) => {
+                if (defaultOptions.getUserInfo) {
+                    const tweetHeaderTemplate = displayUserInfo(userInfo); 
+                    $('.tweetHeader', element).html(tweetHeaderTemplate);
+                    defaultOptions.getUserInfo = false;
+                }
 
-                    const template = displayTweet(data[index]);
+                $(tweets).each((index) => {
+
+                    const template = displayTweet(tweets[index]);
                     $('.tweetContainer', element).prepend(template);
                 });
             });
@@ -120,7 +157,6 @@
 
                 if (countDownInterval <= 0) {
                     fetchLatestTweets(element);
-
                     // reset the counter
                     countDownInterval = cacheCountDownInterval;
                 }
@@ -173,6 +209,47 @@
             </div>
             `;
         };
+
+
+        const displayUserInfo = (userInfo) => {
+            const avatar = userInfo[0]['profile_image_url_https'];
+            const fullName = userInfo[0]['name'];
+            const handle = '@' + userInfo[0]['screen_name'];
+            const location = userInfo[0]['location'];
+            const description = userInfo[0]['description'];
+            
+            const followerCountRaw = Math.round(userInfo[0]['followers_count'] * 10) / 10;
+            const followerCount = followerCountRaw.toFixed(1);
+
+            const followingCountRaw = Math.round(userInfo[0]['friends_count'] * 10) / 10;
+            const followingCount = followingCountRaw.toFixed(1);
+
+            const websiteText = userInfo[0]['entities']['url']['urls'][0]['display_url'];
+            const websiteLink = userInfo[0]['entities']['url']['urls'][0]['url'];
+
+            return `
+            <div class="row">
+                <div class="col-sm-3 text-center">
+                    <img src="${avatar}" />
+                </div>
+                <div class="col-sm-9">
+                    <div class="userFullName text-center">${fullName}</div>
+                    <div class="userInfo text-center"><em>@${handle}</em> | <span class="glyphicon glyphicon-globe" aria-hidden="true"></span> ${location}</div>
+                </div>
+            </div>
+            <hr/>
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="userInfo"><em>${description}</em></div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="userInfo text-right"><strong>${followerCount}</strong> Followers</div>
+                    <div class="userInfo text-right"><strong>${followingCount}</strong> Following</div>
+                    <div class="userInfo text-right"><a href="${websiteLink}"><span class="glyphicon glyphicon-link" aria-hidden="true"></span> ${websiteText}</a></div>
+                </div>
+            </div>
+            `;
+        }
 
         /**
          *

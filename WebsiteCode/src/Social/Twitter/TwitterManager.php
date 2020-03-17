@@ -27,6 +27,12 @@ class TwitterManager
      * @var string
      */
     public $url = 'https://api.twitter.com/1.1/statuses/user_timeline.json';
+
+    public $apiUrls = [
+        'userTimeline' => 'https://api.twitter.com/1.1/statuses/user_timeline.json',
+        'userInfo' => 'https://api.twitter.com/1.1/users/lookup.json',
+    ];
+
     /**
      * @var string
      */
@@ -144,6 +150,8 @@ class TwitterManager
 
         $fullUrl = $this->url . $this->parsedQueryString;
 
+        // var_dump($fullUrl);
+
         $requestHandler = $this->getRequestHandler();
         $requestHandler->setOption(CURLOPT_HTTPHEADER, [$this->buildRequestHeader(), 'Expect:',]);
         $requestHandler->setOption(CURLOPT_TIMEOUT, 10);
@@ -154,8 +162,8 @@ class TwitterManager
 
         $response = $requestHandler->initiateRequest();
 
-
         $curlChannelErrorMessage = $requestHandler->getError();
+
 
         // set the response status code
         $errorHttpCode = (int)$requestHandler->getHttpCode();
@@ -188,7 +196,7 @@ class TwitterManager
     {
         $attributes = [
             'screen_name' => $this->getTwitterHandle(),
-            'count'       => $this->getCount(),
+            // 'count'       => $this->getCount(),
         ];
 
         $queryString = http_build_query($attributes, '', '&');
@@ -214,7 +222,7 @@ class TwitterManager
     public function setTwitterHandle(string $twitterHandle): TwitterManager
     {
         $twitterHandle = trim($twitterHandle);
-        $this->twitterHandle = '@' . ltrim($twitterHandle, '@');
+        $this->twitterHandle = /*'@' . */ltrim($twitterHandle, '@');
         return $this;
     }
 
@@ -241,6 +249,25 @@ class TwitterManager
         // if count is too high, set to max allowable
         $count = min($count, self::MAX_ALLOWABLE_COUNT);
         $this->count = $count;
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getUrl(): string
+    {
+        return $this->url;
+    }
+
+    /**
+     * @return int
+     */
+    public function setUrl(string $apiMethod): TwitterManager
+    {
+        if (!empty($apiMethod)) {
+            $this->url = $this->apiUrls[$apiMethod];
+        }
         return $this;
     }
 

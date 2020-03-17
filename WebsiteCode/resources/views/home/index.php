@@ -52,7 +52,9 @@
                 <div id="jqTweets"></div>
             </div>
             <div class="col-sm-6">
-                <iframe id="ifTweets"></iframe>
+                <iframe id="ifTweets">
+                    <a class="twitter-timeline" href="https://twitter.com/codinghorror">Tweets by @codinghorror</a>
+                </iframe>
             </div>
         </div>
     </div>
@@ -61,7 +63,40 @@
 <script type="text/javascript">
     $(document).ready(function () {
         $("#jqTweets").refreshTweets({
-            handle: "wsop"
+            handle: "wsop",
+            getUserInfo: true
         });
+       /* $("#ifTweets").loadIframe({
+            handle: "codinghorror"
+        });*/
     });
 </script>
+
+<script sync src="https://platform.twitter.com/widgets.js"></script>
+
+<script>
+    /*(function() {
+        // See https://dev.twitter.com/web/javascript/creating-widgets#create-timeline
+        var dataSource = {
+          sourceType: 'profile',
+          screenName: 'codinghorror'
+        };
+
+        // Your HTML element's ID
+        var target = document.getElementById('ifTweets');
+
+        // See https://dev.twitter.com/web/embedded-timelines/parameters
+        var options = {
+          chrome: 'nofooter',
+          height: 800,
+          width: 500
+        };
+
+        twttr.ready(function(twttr) {
+          twttr.widgets.createTimeline(dataSource, target, options);
+        });
+      })()*/
+  
+
+</script>
+
